@@ -8,13 +8,14 @@ const Note = require('../models/note');
 //Find/Search for notes using Note.find
 mongoose.connect(MONGODB_URI)
   .then(() => {
-    const searchTerm = 'lady gaga';
+    const searchTerm = 'Posuere';
     let filter = {};
 
     if (searchTerm) {
       filter.title = {$regex: searchTerm};
+      filter.content = {$regex: searchTerm};
     }
-    return Note.find(filter).sort({updateAt: 'desc'});
+    return Note.find({$or: [{title: filter.title}, {content: filter.content}]}).sort({updateAt: 'desc'});
   })
   .then(results => {
     console.log(results);
