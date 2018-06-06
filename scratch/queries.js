@@ -29,42 +29,42 @@ mongoose.connect(MONGODB_URI)
   });
 
 //Find note by id using Note.findById
-// mongoose.connect(MONGODB_URI)
-//   .then(() => {
-//     const id = '000000000000000000000006';
-//     console.log(id);
-//     return Note.findById(id);
-//   })
-//   .then(results => {
-//     console.log(results);
-//   })
-//   .then(() => {
-//     return mongoose.disconnect();
-//   })
-//   .catch(err => {
-//     console.error(`ERROR: ${err.message}`);
-//     console.error(err);
-//   });
+mongoose.connect(MONGODB_URI)
+  .then(() => {
+    const id = '000000000000000000000006';
+    console.log(id);
+    return Note.findById(id);
+  })
+  .then(results => {
+    console.log(results);
+  })
+  .then(() => {
+    return mongoose.disconnect();
+  })
+  .catch(err => {
+    console.error(`ERROR: ${err.message}`);
+    console.error(err);
+  });
 
 //Create a new note using Note.create
-// mongoose.connect(MONGODB_URI)
-//   .then(() => {
-//     const newNote = {
-//       title: 'Test 1',
-//       content: 'Test 2'
-//     };
-//     return Note.create(newNote);
-//   })
-//   .then(results => {
-//     console.log(results);
-//   })
-//   .then(() => {
-//     return mongoose.disconnect();
-//   })
-//   .catch(err => {
-//     console.error(`ERROR: ${err.message}`);
-//     console.error(err);
-//   });
+mongoose.connect(MONGODB_URI)
+  .then(() => {
+    const newNote = {
+      title: 'Test 1',
+      content: 'Test 2'
+    };
+    return Note.create(newNote);
+  })
+  .then(results => {
+    console.log(results);
+  })
+  .then(() => {
+    return mongoose.disconnect();
+  })
+  .catch(err => {
+    console.error(`ERROR: ${err.message}`);
+    console.error(err);
+  });
 
 //Update a note by id using Note.findByIdAndUpdate
 // mongoose.connect(MONGODB_URI)
