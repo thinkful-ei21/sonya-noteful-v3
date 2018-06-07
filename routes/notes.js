@@ -34,19 +34,19 @@ router.get('/:id', (req, res, next) => {
   const id = req.params.id;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    cost err = new Error('The `id` is not valid');
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
-  };
+  }
 
   Note.findById(id)
     .then((result) => {
       if (result) {
-      res.json(result);
-       } else {
-      next();
-    }
-  })
+        res.json(result);
+      } else {
+        next();
+      }
+    })
     .catch(err => {
       next(err);
     });
@@ -73,8 +73,8 @@ router.post('/', (req, res, next) => {
   Note.create(newNote)
     .then(result => {
       res.location(`${req.originalUrl}/${result.id}`)
-      .status(201)
-      .json(result);
+        .status(201)
+        .json(result);
     })
     .catch(err => {
       next(err);
@@ -116,7 +116,7 @@ router.put('/:id', (req, res, next) => {
       } else {
         next();
       }
-      })
+    })
     .catch(err => {
       next(err);
     });
@@ -126,7 +126,7 @@ router.put('/:id', (req, res, next) => {
 
 /* ========== DELETE/REMOVE A SINGLE ITEM ========== */
 router.delete('/:id', (req, res, next) => {
-  const [id] = req.params;
+  const id = req.params.id;
 
   Note.findByIdAndRemove(id)
     .then(() => {
