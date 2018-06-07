@@ -1,11 +1,4 @@
 language: node_js
 node_js: node
-services:
+services: 
 - mongodb
-deploy:
-  provider: heroku
-  api_key:
-    secure: kDdLX4mvL9LaW7h84criuLYXB2Z6z7eOMpCiI9BDyrcVeOEyUT5m/fiDBqg0MwdxsiXe9suUBkLZQ83dxSbDUJbW/SwX5vrF72zd9U0XkVldhCgGWmwO9wgx1V9E2wMmjfUR2oxm+LG3uOzs+6S+lFb0xtmPW63afYlDvCyZFnki61ZWCDOkIhbNgr5o3jvaAePDOCeVfrl+fhvfmFyD2FxRrznoZC5f4jIYlx/Q+KT1JOAhZ3C/GXywIydvb3XoaOQ66nL0WIafw2AiXHDEWb8Gp07ZoB2BfJQSGMVYOz5i6Q13A9pfqW+90bfDVNPRo9Hbjg/vkHvNK2wEgP1Ne7xxoz/+FZLSUDiaZSi81L8wsDXFQ/usREe33nVd/FLP144l3NIuijEe6XTE0BpGZFQHNpc0A7s3CLOpgsBIiSMFOGlY0r1sV+bb8kODhl9rhxzkPUOl6vSP3RevOmEH7FDBCqlJZVxRETemplNZBUJCC7JKoboIHpu+ODc1y5h+s46z8fvfd6fyuJwTuHOqNSH7TjmlzlDlqO8PmY3vRuDkXJV+id1QXUJ1GgYoNisspcRkHeBK+5e1btvxEmqTCe/JBcbLsvtnJZhTvnEowmRTRlxyItwWOxDPLCJpB2GoCTphqT9oFM7RGBISgkkg2vleDzR/KxqmOgNoDx4lr48=
-  app: salty-ocean-87239
-  on:
-    repo: thinkful-ei21/sonya-noteful-v3
