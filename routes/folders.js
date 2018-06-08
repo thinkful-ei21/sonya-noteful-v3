@@ -126,16 +126,37 @@ router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
   console.log(id);
 
-  
-  Note.deleteMany({folderId: id})
-    .then(() => Folder.findByIdAndRemove(id))
-    
+  /***** Never trust users - validate input *****/
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    const err = new Error('The `id` is not valid');
+    err.status = 400;
+    return next(err);
+  }
+
+  const folderRemoverPromise = Folder.findByIdAndRemove(id);
+
+  const noteRemoverPromise = Note.updateMany(
+    {folderId: id},
+    {$unset: {folderId: ''}}
+  );
+
+  Promise.all([folderRemoverPromise, noteRemoverPromise])
     .then(() => {
-      res.sendStatus(204).end();
+      res.status(204).end();
     })
     .catch(err => {
       next(err);
     });
+    
+  // Note.deleteMany({folderId: id})
+  //   .then(() => Folder.findByIdAndRemove(id))
+    
+  //   .then(() => {
+  //     res.sendStatus(204).end();
+  //   })
+  //   .catch(err => {
+  //     next(err);
+  //   });
 });
 
 
