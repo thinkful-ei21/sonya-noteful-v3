@@ -54,7 +54,7 @@ describe('Noteful API - folders', function() {
         });
     });
 
-    it.only('should return a list with the correct right fields', function() {
+    it('should return a list with the correct right fields', function() {
       return Promise.all([
         Folder.find().sort({updatedAt: 'asc'}),
         chai.request(app).get('/api/folders')
@@ -121,4 +121,167 @@ describe('Noteful API - folders', function() {
     });
   });
 
+  describe('POST /api/folders', function() {
+
+    it('should create and return a new folder when provided valid data', function() {
+      const newFolder = {
+        'name': 'Trash'
+      };
+      let res;
+      return chai.request(app)
+        .post('/api/folders')
+        .send(newFolder)
+        .then(function(_res) {
+          res = _res;
+          expect(res).to.have.status(201);
+          expect(res).to.have.header('location');
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.keys('id', 'name', 'createdAt', 'updatedAt');
+          return Folder.findById(res.body.id);
+        })
+        .then(data => {
+          expect(res.body.id).to.equal(data.id);
+          expect(res.body.name).to.equal(data.name);
+          expect(new Date(res.body.createdAt)).to.eql(data.createdAt);
+          expect(new Date(res.body.updatedAt)).to.eql(data.updatedAt);
+        });
+    });
+    
+    it('should return an error if no name is given', function() {
+      const newFolder = {};
+      return chai.request(app)
+        .post('/api/folders')
+        .send(newFolder)
+        .then((res) => {
+          expect(res).to.be.json;
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.equal('Missing `name` in request body');
+        });
+    });
+  });
+
+  describe('PUT /api/folders/:id', function() {
+
+    it('should update the folder when provided valid data', function() {
+      const updatedFolder = {
+        'name': 'Junk'
+      };
+      
+      let res;
+      let item;
+
+      return Folder.findOne()
+        .then(_item => {
+          item = _item;
+          return chai.request(app)
+            .put(`/api/folders/${item.id}`)
+            .send(updatedFolder);
+        })
+        .then((_res) => {
+          res = _res;
+          expect(res).to.be.json;
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.all.keys('id', 'name', 'createdAt', 'updatedAt');
+
+          return Folder.findById(res.body.id);
+        })
+        .then((data) => {
+          expect(res.body.id).to.equal(data.id);
+          expect(res.body.name).to.equal(data.name);
+          expect(new Date(res.body.createdAt)).to.eql(data.createdAt);
+          // expect note to have been updated
+          expect(new Date(res.body.updatedAt)).to.greaterThan(item.updatedAt);
+          expect(new Date(res.body.updatedAt)).to.eql(data.updatedAt);
+        });
+    });
+
+    it('should respond with status 400 and an error message when `id` is not valid', function() {
+      const updatedItem = {
+        'name': 'Junk'
+      };
+      return chai.request(app)
+        .put('/api/notes/NOT-A-VALID-ID')
+        .send(updatedItem)
+        .then(res => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.eq('The `id` is not valid');
+        });
+    });
+
+    it('should respond with a 404 for an id that does not exist', function () {
+      // The string "DOESNOTEXIST" is 12 bytes which is a valid Mongo ObjectId
+      const updateItem = {
+        'name': 'Junk',
+       
+      };
+      return chai.request(app)
+        .put('/api/folders/DOESNOTEXIST')
+        .send(updateItem)
+        .then(res => {
+          expect(res).to.have.status(404);
+        });
+    });
+
+    it('should return an error when missing "name" field', function () {
+      const updateItem = {
+        'content': 'woof woof'
+      };
+      let data;
+      return Folder.findOne()
+        .then(_data => {
+          data = _data;
+
+          return chai.request(app)
+            .put(`/api/folders/${data.id}`)
+            .send(updateItem);
+        })
+        .then(res => {
+          expect(res).to.have.status(400);
+          expect(res).to.be.json;
+          expect(res.body).to.be.a('object');
+          expect(res.body.message).to.equal('Missing `name` in the req body');
+        });
+    });
+
+    it.only('should return an error if the folder name already exists', function() {
+      let newFolder = {};
+      return Folder.find().limit(2)
+        .then((data) => {
+          const [folder1, folder2] = data;
+          newFolder.name = folder1.name;
+          return chai.request(app)
+            .put(`/api/folders/${folder2.id}`)
+            .send(newFolder);
+        })
+        .then(res => {
+          expect(res).to.have.status(400);
+          expect(res.body.message).to.equal('The folder name already exists');
+          expect(res).to.be.json;
+          expect(res).to.be.a('object');
+        });
+    });
+
+  });
+
+  describe('DELETE /api/folders/:id', function () {
+
+    it('should delete an existing folder and all related notes and respond with 204', function () {
+      let data;
+      return Folder.findOne()
+        .then(_data => {
+          data = _data;
+          return chai.request(app).delete(`/api/folders/${data.id}`);
+        })
+        .then(function (res) {
+          expect(res).to.have.status(204);
+          expect(res.body).to.be.empty;
+          return Folder.count({ _id: data.id });
+        })
+        .then(count => {
+          expect(count).to.equal(0);
+        });
+    });
+  });
 });

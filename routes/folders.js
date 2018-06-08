@@ -53,7 +53,7 @@ router.post('/', (req, res, next) => {
 
   //Never trust the user, validate input
   if (!name) {
-    const err = new Error('Mising `name` in request body');
+    const err = new Error('Missing `name` in request body');
     err.status = 400;
     return next(err);
   }
