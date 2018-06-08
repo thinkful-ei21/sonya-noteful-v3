@@ -12,9 +12,14 @@ const Note = require('../models/note');
 router.get('/', (req, res, next) => {
   let filter = {};
   const {searchTerm} = req.query;
+  const {folderId} = req.query;
 
   if (searchTerm) {
     filter.title = {$regex: searchTerm, $options: 'i'};
+  }
+
+  if (folderId) {
+    filter.folderId = folderId;
   }
 
   Note.find(filter)
@@ -56,11 +61,18 @@ router.get('/:id', (req, res, next) => {
 /* ========== POST/CREATE AN ITEM ========== */
 router.post('/', (req, res, next) => {
 
-  const {title, content} = req.body;
+  const {title, content, folderId} = req.body;
+  
 
   //Never trust the user, validate input
   if (!title) {
     const err = new Error('Missing `title` in request body');
+    err.status = 400;
+    return next(err);
+  }
+
+  if (folderId && !mongoose.Types.ObjectId.isValid(folderId)) {
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }
@@ -85,7 +97,7 @@ router.post('/', (req, res, next) => {
 /* ========== PUT/UPDATE A SINGLE ITEM ========== */
 router.put('/:id', (req, res, next) => {
   const {id }= req.params;
-  const {title, content} = req.body;
+  const {title, content, folderId} = req.body;
 
   /***** Never trust users - validate input *****/
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -96,6 +108,12 @@ router.put('/:id', (req, res, next) => {
 
   if (!title) {
     const err = new Error('Missing `title` in request body');
+    err.status = 400;
+    return next(err);
+  }
+
+  if (folderId && !mongoose.Types.ObjectId.isValid(folderId)) {
+    const err = new Error('The `id` is not valid');
     err.status = 400;
     return next(err);
   }

@@ -9,8 +9,10 @@ const app = require('../server');
 const {TEST_MONGODB_URI} = require('../config');
 
 const Note = require('../models/note');
+const Folder = require('../models/folder');
 
 const seedNotes = require('../db/seed/notes');
+const seedFolders = require('../db/seed/folders');
 
 const expect = chai.expect;
 chai.use(chaiHttp);
@@ -30,7 +32,11 @@ describe('Noteful API - notes', function() {
   });
 
   beforeEach(function () {
-    return Note.insertMany(seedNotes);
+    return Promise.all([
+      Note.insertMany(seedNotes),
+      Folder.insertMany(seedFolders),
+      Folder.createIndexes(),
+    ]);
   });
 
   afterEach(function () {
@@ -180,7 +186,7 @@ describe('Noteful API - notes', function() {
 
   describe('POST /api/notes', function() {
 
-    it.only('should create and return a new item when provided valid data' ,function() {
+    it('should create and return a new item when provided valid data' ,function() {
       const newItem = {
         'title': 'The best article about cats ever!',
         'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...'
