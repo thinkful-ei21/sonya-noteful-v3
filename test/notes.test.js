@@ -77,7 +77,7 @@ describe('Noteful API - notes', function() {
             console.log(item);
             console.log(i);
             expect(item).to.be.a('object');
-            expect(item).to.include.all.keys('id', 'title', 'createdAt', 'updatedAt');
+            expect(item).to.include.all.keys('id', 'title', 'folderId', 'createdAt', 'updatedAt');
             expect(item.id).to.equal(data[i].id);
             expect(item.title).to.equal(data[i].title);
             expect(item.content).to.equal(data[i].content);
@@ -103,7 +103,7 @@ describe('Noteful API - notes', function() {
           expect(res.body).to.have.length(data.length);
           res.body.forEach(function (item, i) {
             expect(item).to.be.a('object');
-            expect(item).to.include.all.keys('id', 'title', 'createdAt', 'updatedAt');
+            expect(item).to.include.all.keys('id', 'title', 'folderId','createdAt', 'updatedAt');
             expect(item.id).to.equal(data[i].id);
             expect(item.title).to.equal(data[i].title);
             expect(item.content).to.equal(data[i].content);
@@ -148,7 +148,7 @@ describe('Noteful API - notes', function() {
           expect(res).to.be.json;
 
           expect(res.body).to.be.an('object');
-          expect(res.body).to.have.keys('id', 'title', 'content', 'createdAt', 'updatedAt');
+          expect(res.body).to.have.keys('id', 'title', 'folderId', 'content', 'createdAt', 'updatedAt');
 
           //then compare database results to API response
           expect(res.body.id).to.equal(data.id);
@@ -180,7 +180,7 @@ describe('Noteful API - notes', function() {
 
   describe('POST /api/notes', function() {
 
-    it('should create and return a new item when provided valid data' ,function() {
+    it.only('should create and return a new item when provided valid data' ,function() {
       const newItem = {
         'title': 'The best article about cats ever!',
         'content': 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor...'
@@ -245,7 +245,7 @@ describe('Noteful API - notes', function() {
           expect(res).to.be.json;
           expect(res).to.have.status(200);
           expect(res.body).to.be.a('object');
-          expect(res.body).to.have.all.keys('id', 'title', 'content', 'createdAt', 'updatedAt');
+          expect(res.body).to.have.all.keys('id', 'title', 'content', 'folderId', 'createdAt', 'updatedAt');
           
           return Note.findById(res.body.id);
         })

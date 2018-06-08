@@ -128,9 +128,8 @@ router.delete('/:id', (req, res, next) => {
 
   
   Note.deleteMany({folderId: id})
-    .then(() => {
-      Folder.findByIdAndRemove(id);
-    })
+    .then(() => Folder.findByIdAndRemove(id))
+    
     .then(() => {
       res.sendStatus(204).end();
     })

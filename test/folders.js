@@ -245,7 +245,7 @@ describe('Noteful API - folders', function() {
         });
     });
 
-    it.only('should return an error if the folder name already exists', function() {
+    it('should return an error if the folder name already exists', function() {
       let newFolder = {};
       return Folder.find().limit(2)
         .then((data) => {
@@ -281,6 +281,7 @@ describe('Noteful API - folders', function() {
         })
         .then(count => {
           expect(count).to.equal(0);
+          
         });
     });
   });
