@@ -114,7 +114,7 @@ describe('Noteful API - folders', function() {
     it('should return a 404 for an id that does not exist', function() {
       //the string 'DOESNOTEXIST' is a 12 bytes which is a valid mongo OjectId
       return chai.request(app)
-        .get('/api/notes/DOESNOTEXIST')
+        .get('/api/folders/DOESNOTEXIST')
         .then(res => {
           expect(res).to.have.status(404);
         });
