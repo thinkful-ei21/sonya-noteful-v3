@@ -2,7 +2,8 @@
 
 const express = require('express');
 const morgan = require('morgan');
-
+require('dotenv').config();
+ 
 const { PORT, MONGODB_URI } = require('./config');
 
 const notesRouter = require('./routes/notes');
