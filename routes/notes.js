@@ -96,7 +96,7 @@ router.post('/', (req, res, next) => {
   const newNote = {
     title,
     content,
-    folderId, 
+    folderId: folderId === '' ? null : folderId,
     tags
   };
 
